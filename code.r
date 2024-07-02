@@ -218,6 +218,73 @@ setcolorder(result, c("probeID","BETA","SE", "P_VAL"))
 result$padj <- p.adjust(result$P_VAL, method ="BH")
 write.xlsx(result, file = "output/all_v2_minus_v1_mval_trimmed_urate_rank.xlsx")
 
+# Association analysis between DNA methylation change and urate change
+
+load("/input/mv1.t.rata")
+load("/input/pdv1.rdata")
+phe.use <- pdv1 %>% select(plate, CD8T, CD4T, NK, Bcell, Mono, Neu)
+sum(substr(rownames(phe.use),1,9) == substr(rownames(mv1.t), 2, 10))
+LMtest = function(meth_matrix, methcol, plate, CD8, CD4, NK, B, Mono, Neu) {
+	mod = lm(meth_matrix[, methcol] ~ plate+CD8+CD4+NK+B+Mono+Neu)
+	mod$residuals	
+	}
+res <- lapply(setNames(seq_len(ncol(mv1.t)), dimnames(mv1.t)[[2]]), LMtest, meth_matrix=mv1.t, plate=pdv1$Sample_Plate, CD8=pdv1$CD8T, CD4=pdv1$CD4T, NK=pdv1$NK, B=pdv1$Bcell, Mono=pdv1$Mono, Neu=pdv1$Neu)
+setattr(res, 'class', 'data.frame')
+setattr(res, "row.names", c(NA_integer_,283))
+setattr(res, "names", make.names(names(res), unique=TRUE))
+probelistnamesB <- names(res)
+result <- t(data.table(res))
+result<-data.table(result)
+colnames(result) <- rownames(mv1.t)
+result[, probeID := probelistnamesB]
+t1_raw_regress <- result
+save(t1_raw_regress, file = "/input/t1_raw_regress.rdata") 
+
+load("/input/mv2.t.rata")
+load("/input/pdv2.rdata")
+phe.use <- pdv1 %>% select(plate, CD8T, CD4T, NK, Bcell, Mono, Neu)
+sum(substr(rownames(phe.use),1,9) == substr(rownames(mv1.t), 2, 10))
+LMtest = function(meth_matrix, methcol, plate, CD8, CD4, NK, B, Mono, Neu) {
+	mod = lm(meth_matrix[, methcol] ~ plate+CD8+CD4+NK+B+Mono+Neu)
+	mod$residuals	
+	}
+res <- lapply(setNames(seq_len(ncol(mv1.t)), dimnames(mv1.t)[[2]]), LMtest, meth_matrix=mv1.t, plate=pdv1$Sample_Plate, CD8=pdv1$CD8T, CD4=pdv1$CD4T, NK=pdv1$NK, B=pdv1$Bcell, Mono=pdv1$Mono, Neu=pdv1$Neu)
+setattr(res, 'class', 'data.frame')
+setattr(res, "row.names", c(NA_integer_,283))
+setattr(res, "names", make.names(names(res), unique=TRUE))
+probelistnamesB <- names(res)
+result <- t(data.table(res))
+result<-data.table(result)
+colnames(result) <- rownames(mv1.t)
+result[, probeID := probelistnamesB]
+t2_raw_regress <- result
+save(t2_raw_regress, file = "/input/t2_raw_regress.rdata") 
+
+load("/input/mv2.t.rata")
+load("/input/pdv2.rdata")
+phe.use <- pdv1 %>% select(plate, CD8T, CD4T, NK, Bcell, Mono, Neu)
+sum(substr(rownames(phe.use),1,9) == substr(rownames(mv1.t), 2, 10))
+LMtest = function(meth_matrix, methcol, plate, CD8, CD4, NK, B, Mono, Neu) {
+	mod = lm(meth_matrix[, methcol] ~ plate+CD8+CD4+NK+B+Mono+Neu)
+	mod$residuals	
+	}
+res <- lapply(setNames(seq_len(ncol(mv1.t)), dimnames(mv1.t)[[2]]), LMtest, meth_matrix=mv1.t, plate=pdv1$Sample_Plate, CD8=pdv1$CD8T, CD4=pdv1$CD4T, NK=pdv1$NK, B=pdv1$Bcell, Mono=pdv1$Mono, Neu=pdv1$Neu)
+setattr(res, 'class', 'data.frame')
+setattr(res, "row.names", c(NA_integer_,283))
+setattr(res, "names", make.names(names(res), unique=TRUE))
+probelistnamesB <- names(res)
+result <- t(data.table(res))
+result<-data.table(result)
+colnames(result) <- rownames(mv1.t)
+result[, probeID := probelistnamesB]
+t2_raw_regress <- result
+save(t2_raw_regress, file = "/input/t2_raw_regress.rdata") 
+
+
+
+
+
+
 # Manhattan plot
 gwas_data_load <- read_excel("output/EWAS_result.xlsx")
 ann850k <- getAnnotation(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
